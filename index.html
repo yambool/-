@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прогнозиране на разход на електроенергия</title>
+	<link rel="icon" type="image/x-icon" href="	favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Прогнозиране на разход на електроенергия</h1>
+    <div class="form-container">
+        <form id="energy-form">
+            <div class="form-group">
+                <label for="device">Уред:</label>
+                <input type="text" id="device" placeholder="Например: Хладилник" required>
+            </div>
+            <div class="form-group">
+                <label for="watts">Киловатове:</label>
+                <input type="number" id="watts" placeholder="Например: 200" required>
+            </div>
+            <div class="form-group">
+                <label for="day-hours">Часове | Дневна тарифа:</label>
+                <input type="number" id="day-hours" placeholder="Например: 8" required max="12">
+            </div>
+            <div class="form-group">
+                <label for="night-hours">Часове | Нощна тарифа:</label>
+                <input type="number" id="night-hours" placeholder="Например: 4" required max="12">
+            </div>
+            <div class="button-container">
+                <button type="submit">Добави уред</button>
+                <button type="button" id="clear-button">Изчисти уредите</button>
+            </div>
+        </form>
+    </div>
+    <table id="energy-table">
+        <thead>
+            <tr>
+                <th>Уред</th>
+                <th>Киловатове</th>
+                <th>Часове (Дневна)</th>
+                <th>Часове (Нощна)</th>
+                <th>Дневна (кВтч)</th>
+                <th>Нощна (кВтч)</th>
+                <th>Общо (кВтч)</th>
+                <th>Разход (лв)</th>
+				<th>‎ </th> <!-- Колона за бутоните за премахване -->
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div id="total-cost">
+        <h2>Общ разход: <span id="total"></span> лв</h2>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
