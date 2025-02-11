@@ -3,17 +3,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const tableBody = document.querySelector("#energy-table tbody");
     const totalCostElement = document.getElementById("total");
     const clearButton = document.getElementById("clear-button");
-    
+
     function loadFromLocalStorage() {
         const storedDevices = JSON.parse(localStorage.getItem("devices")) || [];
         storedDevices.forEach(addRow);
         updateTotalCost();
     }
-    
+
     function saveToLocalStorage(devices) {
         localStorage.setItem("devices", JSON.stringify(devices));
     }
-    
+
     function addRow(deviceData) {
         const newRow = tableBody.insertRow();
         newRow.innerHTML = `
@@ -25,22 +25,23 @@ document.addEventListener("DOMContentLoaded", function () {
             <td>${deviceData.nightConsumption.toFixed(2)}</td>
             <td>${deviceData.totalConsumption.toFixed(2)}</td>
             <td>${deviceData.totalCost.toFixed(2)}</td>
+            <td>${deviceData.timestamp}</td>
             <td><button class="delete-button">Премахни</button></td>
         `;
-        
+
         newRow.querySelector(".delete-button").addEventListener("click", function () {
             newRow.remove();
             removeFromLocalStorage(deviceData);
             updateTotalCost();
         });
     }
-    
+
     function removeFromLocalStorage(deviceData) {
         let devices = JSON.parse(localStorage.getItem("devices")) || [];
         devices = devices.filter(d => d.device !== deviceData.device || d.watts !== deviceData.watts);
         saveToLocalStorage(devices);
     }
-    
+
     function updateTotalCost() {
         let total = 0;
         document.querySelectorAll("#energy-table tbody tr").forEach(row => {
@@ -48,10 +49,10 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         totalCostElement.innerText = total.toFixed(2);
     }
-    
+
     form.addEventListener("submit", function (event) {
         event.preventDefault();
-        
+
         const deviceData = {
             device: document.getElementById("device").value,
             watts: parseFloat(document.getElementById("watts").value),
@@ -59,26 +60,27 @@ document.addEventListener("DOMContentLoaded", function () {
             nightHours: parseFloat(document.getElementById("night-hours").value),
             dayConsumption: (parseFloat(document.getElementById("watts").value) * parseFloat(document.getElementById("day-hours").value)) / 1000,
             nightConsumption: (parseFloat(document.getElementById("watts").value) * parseFloat(document.getElementById("night-hours").value)) / 1000,
+            timestamp: new Date(new Date().getTime() + 2 * 60 * 60 * 1000).toISOString().slice(0, 16).replace('T', ' ')
         };
-        
+
         deviceData.totalConsumption = deviceData.dayConsumption + deviceData.nightConsumption;
         deviceData.totalCost = (deviceData.dayConsumption * 0.28360) + (deviceData.nightConsumption * 0.16536);
-        
+
         addRow(deviceData);
-        
+
         let devices = JSON.parse(localStorage.getItem("devices")) || [];
         devices.push(deviceData);
         saveToLocalStorage(devices);
-        
+
         updateTotalCost();
         form.reset();
     });
-    
+
     clearButton.addEventListener("click", function () {
         localStorage.removeItem("devices");
         tableBody.innerHTML = "";
         totalCostElement.innerText = "0.00";
     });
-    
+
     loadFromLocalStorage();
 });
